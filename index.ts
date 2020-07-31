@@ -34,7 +34,7 @@ const _getCosmicResult = (result: CosmiconfigResult): CosmicResult => {
     env[camel(key)] = env[key];
     delete env[key];
   }
-  return { ...result?.config, ...env };
+  return { ...(result || {}).config, ...env };
 };
 
 let cachedConfig: CosmicResult | undefined = undefined;
