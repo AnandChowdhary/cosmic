@@ -4,10 +4,14 @@ import {
   Options,
   OptionsSync,
 } from "cosmiconfig";
-import { config } from "dotenv";
+import { config as dotenvConfig } from "dotenv";
 import camel from "lodash.camelcase";
 import { CosmiconfigResult } from "cosmiconfig/dist/types";
-config();
+dotenvConfig();
+
+export interface CosmicResult {
+  [index: string]: any;
+}
 
 const defaultSearchPlaces = (name: string) => [
   "package.json",
@@ -24,9 +28,7 @@ const defaultSearchPlaces = (name: string) => [
   `${name}.config.js`,
 ];
 
-const _getCosmicResult = (
-  result: CosmiconfigResult
-): { [index: string]: any } => {
+const _getCosmicResult = (result: CosmiconfigResult): CosmicResult => {
   const env = { ...process.env };
   for (const key in env) {
     env[camel(key)] = env[key];
@@ -35,18 +37,32 @@ const _getCosmicResult = (
   return { ...result?.config, ...env };
 };
 
+let cachedConfig: CosmicResult | undefined = undefined;
 export const cosmic = async (name: string, options?: Options) => {
   const { search } = cosmiconfig(name, {
     searchPlaces: defaultSearchPlaces(name),
     ...options,
   });
-  return _getCosmicResult(await search());
+  if (!cachedConfig) cachedConfig = _getCosmicResult(await search());
+  return cachedConfig;
 };
 
+let cachedConfigSync: CosmicResult | undefined = undefined;
 export const cosmicSync = (name: string, options?: OptionsSync) => {
   const { search } = cosmiconfigSync(name, {
     searchPlaces: defaultSearchPlaces(name),
     ...options,
   });
-  return _getCosmicResult(search());
+  if (!cachedConfigSync) cachedConfigSync = _getCosmicResult(search());
+  return cachedConfigSync;
+};
+
+export const clearCosmicCache = () => {
+  cachedConfig = undefined;
+  cachedConfigSync = undefined;
+};
+
+export const config = (key: string) => {
+  if (cachedConfig || cachedConfigSync)
+    return (cachedConfig || {})[key] || (cachedConfigSync || {})[key];
 };
