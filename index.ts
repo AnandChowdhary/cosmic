@@ -58,6 +58,7 @@ export const cosmicSync = (name: string, options?: OptionsSync) => {
 };
 
 export const clearCosmicCache = () => {
+  dotenvConfig();
   cachedConfig = undefined;
   cachedConfigSync = undefined;
 };

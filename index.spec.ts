@@ -1,9 +1,22 @@
-import { cosmic } from "./index";
+import { cosmic, cosmicSync, clearCosmicCache, config } from "./index";
 
-describe("empty", () => {
-  it("works", async () => {
-    const config = await cosmic("cosmic");
-    console.log(config);
-    expect(1).toBe(1);
+describe("environment variables", () => {
+  it("has env async", async () => {
+    const data = await cosmic("cosmic");
+    expect(data.nodeEnv).toBe("test");
+  });
+  it("has env sync", () => {
+    const data = cosmicSync("cosmic");
+    expect(data.nodeEnv).toBe("test");
+  });
+});
+
+describe("clear", () => {
+  it("has env sync", () => {
+    // clearCosmicCache();
+    process.env.example_test = "example";
+    const data = cosmicSync("cosmic");
+    console.log(data);
+    expect(config("example_test")).toBe("example");
   });
 });
