@@ -1,7 +1,9 @@
-import { nodeTs } from "./index";
+import { cosmic } from "./index";
 
-describe("node.ts", () => {
-  it("works", () => {
-    expect(nodeTs()).toBeTruthy();
+describe("empty", () => {
+  it("works", async () => {
+    const config = await cosmic("cosmic");
+    console.log(config);
+    expect(1).toBe(1);
   });
 });
