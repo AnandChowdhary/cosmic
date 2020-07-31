@@ -1,4 +1,4 @@
-import { cosmic, cosmicSync, clearCosmicCache, config } from "./index";
+import { cosmic, cosmicSync, config, clearCosmicCache } from "./index";
 
 describe("environment variables", () => {
   it("has env async", async () => {
@@ -11,12 +11,28 @@ describe("environment variables", () => {
   });
 });
 
-describe("clear", () => {
+describe("get config from helper", () => {
+  it("has env async", async () => {
+    await cosmic("cosmic");
+    expect(config("nodeEnv")).toBe("test");
+  });
   it("has env sync", () => {
-    // clearCosmicCache();
-    process.env.example_test = "example";
-    const data = cosmicSync("cosmic");
-    console.log(data);
-    expect(config("example_test")).toBe("example");
+    cosmicSync("cosmic");
+    expect(config("nodeEnv")).toBe("test");
+  });
+});
+
+describe("clear cosmic cache", () => {
+  it("has env async", async () => {
+    await cosmic("cosmic");
+    expect(config("nodeEnv")).toBe("test");
+    clearCosmicCache();
+    expect(config("nodeEnv")).toBeUndefined();
+  });
+  it("has env sync", () => {
+    cosmicSync("cosmic");
+    expect(config("nodeEnv")).toBe("test");
+    clearCosmicCache();
+    expect(config("nodeEnv")).toBeUndefined();
   });
 });

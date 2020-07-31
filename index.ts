@@ -64,6 +64,6 @@ export const clearCosmicCache = () => {
 };
 
 export const config = (key: string) => {
-  if (cachedConfig || cachedConfigSync)
-    return (cachedConfig || {})[key] || (cachedConfigSync || {})[key];
+  if (cachedConfig && cachedConfig[key]) return cachedConfig[key];
+  if (cachedConfigSync && cachedConfigSync[key]) return cachedConfigSync[key];
 };
