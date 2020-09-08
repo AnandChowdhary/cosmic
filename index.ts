@@ -63,7 +63,7 @@ export const clearCosmicCache = () => {
   cachedConfigSync = undefined;
 };
 
-export const config = (key: string)<T: any> => {
+export const config<T: any> = (key: string) => {
   if (cachedConfig && cachedConfig[key]) return cachedConfig[key] as T;
   if (cachedConfigSync && cachedConfigSync[key]) return cachedConfigSync[key] as T;
 };
